@@ -15,8 +15,8 @@ This isn't technically a Godot Plugin, it doesn't use the special Plugin feature
 After that, the «class_name RadialMenu» registers the node so you can add it to a project like you add any Godot node.
 
 # USAGE
-You have to set what items to display in the sectors. If you want text in the center, you can add Label node as a child of the RadialMenu, but it could anything else.
-The visuals are created in a custom drawing (`_draw()`) function. Several functions are available for override allowing you to make your own drawings with needing to do any math.
+You have to set what text to display in the sectors, with the `items` variable. If you want text in the center, you can add Label node as a child of the RadialMenu, but it could anything else.
+The visuals are created in a custom drawing (`_draw()`) function. Several functions are available for override allowing you to make your own drawings without needing to do any math.
 When a sector or the center are pressed, it both emits a signal and calls related functions you may override.
 
 
