@@ -21,4 +21,4 @@ When a sector or the center are pressed, it both emits a signal and calls relate
 
 
 # FUTURE IMPROVEMENTS
-- The `angle_to_idx()` function doesn't have the correct algorithm. It only works under certain mathematical coincidences and that affects how mouse presses and hover are detected.
+- The detection of mouse over center and the drawing of the center don't match and I don't know why.
