@@ -40,10 +40,11 @@ func set_center_radius(rad:int): #TODO: Test this properly.
 	center_radius = inverse_lerp(0, max_radius, rad)
 
 func angle_to_idx(angle:float) -> int:
-	#FIXME, this isn't quite right.
-	angle = angle + start_angle
-	angle = fposmod(angle + TAU, items.size())
-	return floori(angle)
+	#TODO isn't there a purely mathematical way to do this?
+	angle = wrapf( angle + start_angle, -PI, PI )
+	if angle < 0:
+		angle += TAU
+	return floori( remap(angle, 0, TAU, 0, items.size()) )
 
 func angle_to_item(angle:float) -> String:
 	var index = angle_to_idx(angle)
