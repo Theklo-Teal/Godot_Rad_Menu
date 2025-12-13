@@ -6,6 +6,8 @@ Other projects:
 - [The Github for source codes and portfolio](https://github.com/Theklo-Teal)
 - [Ko-fi is where I'll accept donations](https://ko-fi.com/paracortical)
 
+![Demo of RadialMenu with animal names as items](Rad_Menu.png)
+
 # DESCRIPTION
 A control node that displays a radial menu where sectors can be pressed as buttons as well as the center. It's useful as a quick and dirty option for prototyping, or if you want to build upon to make a more elaborate radial menu.
 
