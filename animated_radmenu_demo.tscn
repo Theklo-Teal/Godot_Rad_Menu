@@ -1,0 +1,147 @@
+[gd_scene load_steps=2 format=3 uid="uid://dkoyp3xlq8gyo"]
+
+[sub_resource type="GDScript" id="GDScript_ohniw"]
+script/source = "@tool
+extends RadialMenu
+
+@export var chevron_color : Color
+
+@export_group(\"Center\", \"center_\")
+@export var center_color_normal : Color
+@export var center_color_hover : Color
+@export var center_color_pressing : Color
+
+@export_group(\"Sector\", \"sector_\")
+@export var sector_color_normal : Color
+@export var sector_color_hover : Color
+@export var sector_color_pressing : Color
+
+
+func _ready() -> void:
+	custom_minimum_size = Vector2(300, 300)
+	set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+
+
+func center_polygon(radius:float) -> PackedVector2Array:
+	var poly : PackedVector2Array
+	for n in range(get_child_count()):
+		var start = idx_to_start_angle(n)
+		poly.append(point_at_angle(start, radius))
+	
+	return poly
+
+func draw_center_normal():
+	draw_colored_polygon(center_polygon(central_radius * 0.9), center_color_normal)
+func draw_center_hover():
+	draw_colored_polygon(center_polygon(central_radius * 1.0), center_color_hover)
+func draw_center_pressing():
+	draw_colored_polygon(center_polygon(central_radius * 0.8), center_color_pressing)
+
+func draw_sector_normal(index:int, start:float, _middle:float, stop:float):
+	var thickness = 6
+	var proper_color = sector_color_normal.lightened(inverse_lerp(0, get_child_count(), index))
+	draw_arc(center, max_radius - thickness * 0.5, start, stop, 12, proper_color, thickness)
+	var corn = get_sector_corners(start, stop)
+	var verts = [corn.ini_outer, corn.ini_inner,
+		corn.end_inner, corn.end_outer]
+	draw_polyline(verts, proper_color, thickness)
+
+func draw_sector_hover(index:int, start:float, _middle:float, stop:float):
+	var thickness = 6
+	var arc_thick = 20
+	var proper_color = sector_color_hover.lightened(inverse_lerp(0, get_child_count(), index))
+	draw_arc(center, max_radius - arc_thick * 0.5, start, stop, 12, proper_color, arc_thick)
+	var corn = get_sector_corners(start, stop)
+	var verts = [corn.ini_outer, corn.ini_inner,
+		corn.end_inner, corn.end_outer]
+	draw_polyline(verts, proper_color, thickness)
+
+func draw_sector_pressing(index:int, start:float, _middle:float, stop:float):
+	var thickness = 6
+	var arc_thick = 20
+	var proper_color = sector_color_hover.lightened(inverse_lerp(0, get_child_count(), index))
+	draw_arc(center, max_radius * 0.81 - arc_thick * 0.5, start, stop, 12, proper_color, arc_thick)
+	var corn = get_sector_corners(start, stop)
+	var verts = [corn.ini_outer, corn.ini_inner,
+		corn.end_inner, corn.end_outer]
+	draw_polyline(verts, proper_color, thickness)
+
+
+var bg_angle : float : 
+	set(val):
+		bg_angle = wrapf(val, -PI, PI)
+var chevron_clockwise := true
+
+func _process(delta: float) -> void:
+	var chevron_speed = 50
+	bg_angle += deg_to_rad(chevron_speed) * delta
+	queue_redraw()
+
+func draw_background():
+	var chevron_thick = 12
+	var chevron_size = inverse_lerp_band(0.2)
+	var chevron_count = 7
+	for n in range(chevron_count):
+		var proper_angle = remap(n, 0, chevron_count, -PI, PI) + bg_angle * [-1, 1][int(chevron_clockwise)] 
+		var chevron_center = point_at_angle(proper_angle, inverse_lerp_band(0.4, true))
+		var chevron_angle = wrapf(proper_angle + 0.5 * [-PI, PI][int(chevron_clockwise)], -PI, PI)
+		draw_arc(chevron_center, chevron_size, -PI/2 + chevron_angle, PI/2 + chevron_angle, 3, chevron_color, chevron_thick)
+
+func on_center_pressed():
+	chevron_clockwise = not chevron_clockwise
+
+func on_sector_pressed(idx:int):
+	print(get_child(idx).name)
+"
+
+[node name="Animated_Menu_Demo" type="Container"]
+custom_minimum_size = Vector2(300, 300)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -150.0
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_ohniw")
+chevron_color = Color(0.53538394, 0.4904161, 0.3147658, 1)
+center_color_normal = Color(0.5016006, 0.5007726, 0.41217127, 1)
+center_color_hover = Color(0.59, 0.52726334, 0.2478, 1)
+center_color_pressing = Color(0.5576471, 0.32905638, 0.24326342, 1)
+start_angle = -1.571
+centered_sector = true
+metadata/_custom_type_script = "uid://dhgitjlltnjsj"
+
+[node name="Aries" type="Label" parent="."]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Taurus" type="Label" parent="."]
+layout_mode = 2
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Gemini" type="Label" parent="."]
+layout_mode = 2
+text = "2"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Cancer" type="Label" parent="."]
+layout_mode = 2
+text = "3"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Leo" type="Label" parent="."]
+layout_mode = 2
+text = "4"
+horizontal_alignment = 1
+vertical_alignment = 1

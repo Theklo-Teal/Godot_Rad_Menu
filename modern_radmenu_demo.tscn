@@ -1,0 +1,96 @@
+[gd_scene load_steps=2 format=3 uid="uid://bk506s8us4fyl"]
+
+[sub_resource type="GDScript" id="GDScript_1wyj8"]
+script/source = "@tool
+extends RadialMenu
+
+@export var bg_color : Color
+
+@export_group(\"Center\", \"center_\")
+@export var center_color_normal : Color
+@export var center_color_hover : Color
+@export var center_color_pressing : Color
+
+@export_group(\"Sector\", \"sector_\")
+@export var sector_color_normal : Color
+@export var sector_color_hover : Color
+@export var sector_color_pressing : Color
+
+
+func _ready() -> void:
+	custom_minimum_size = Vector2(300, 300)
+	set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+
+
+func draw_background():
+	var thick = inverse_lerp_band(1)
+	draw_circle(center, max_radius - thick * 0.5, bg_color, false, thick)
+
+func draw_center_normal():
+	pass
+func draw_center_hover():
+	pass
+func draw_center_pressing():
+	draw_circle(center, central_radius * 0.8, center_color_pressing)
+
+func draw_sector_normal(_index:int, start:float, _middle:float, stop:float):
+	var thick = 8
+	draw_arc(center, max_radius - thick * 0.5, start, stop, 12, sector_color_normal, thick)
+	
+func draw_sector_hover(_index:int, start:float, _middle:float, stop:float):
+	var thick = 2
+	var corn = get_sector_corners(start, stop)
+	draw_line(corn.ini_inner, corn.ini_outer, sector_color_hover, thick)
+	draw_line(corn.end_inner, corn.end_outer, sector_color_hover, thick)
+
+func draw_sector_pressing(_index:int, start:float, _middle:float, stop:float):
+	var thick = inverse_lerp_band(0.9)
+	draw_arc(center, thick * 0.55 + central_radius, start, stop, 12, sector_color_pressing, thick )
+"
+
+[node name="Modern_Menu_Demo" type="Container"]
+custom_minimum_size = Vector2(300, 300)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -150.0
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_1wyj8")
+bg_color = Color(0.19793725, 0.19793725, 0.19793719, 1)
+center_color_pressing = Color(0.65012825, 0.6501283, 0.65012825, 1)
+sector_color_normal = Color(0.56, 0.56, 0.56, 1)
+sector_color_hover = Color(0.56078434, 0.56078434, 0.56078434, 1)
+sector_color_pressing = Color(0.6620025, 0.46913528, 0.33073246, 1)
+sector_margin = 0.2
+centered_sector = true
+metadata/_custom_type_script = "uid://dhgitjlltnjsj"
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Otter"
+
+[node name="Label2" type="Label" parent="."]
+layout_mode = 2
+text = "Capibara"
+
+[node name="Label3" type="Label" parent="."]
+layout_mode = 2
+text = "Alpaca"
+
+[node name="Label4" type="Label" parent="."]
+layout_mode = 2
+text = "Donkey"
+
+[node name="Label5" type="Label" parent="."]
+layout_mode = 2
+text = "Leopard"
+
+[node name="Label6" type="Label" parent="."]
+layout_mode = 2
+text = "Elephant"

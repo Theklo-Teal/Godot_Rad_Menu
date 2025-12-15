@@ -1,0 +1,100 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgvfbilsvqk01"]
+
+[sub_resource type="GDScript" id="GDScript_h2yge"]
+script/source = "@tool
+extends RadialMenu
+
+const primer_color = Color(0.352, 0.352, 0.352, 1.0)
+const cart_color = Color(0.65, 0.533, 0.15, 1.0)
+const bore_color = Color(0.115, 0.115, 0.115, 1.0)
+const cyli_color = Color(0.368, 0.361, 0.41, 1.0)
+const axis_color = Color(0.285, 0.285, 0.285, 1.0)
+
+var rounds_fired : int
+
+func _ready() -> void:
+	custom_minimum_size = Vector2(300, 300)
+	set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+
+## Fire a cartridge
+func on_center_pressed():
+	rounds_fired = clamp(rounds_fired + 1, 0, 6)
+
+## Reload Cylinder
+func on_sector_pressed(_idx:int):
+	rounds_fired = clamp(rounds_fired - 1, 0, 6)
+	queue_redraw()
+
+## Draw revolver cylinder
+func draw_background():
+	draw_circle(center, max_radius, cyli_color)
+	draw_circle(center, central_radius, axis_color)
+
+## Draw Cartridges
+func draw_sector_normal(index:int, _start:float, _middle:float, _stop:float):
+	start_angle = _sector_span * (6 - rounds_fired) - PI/2
+	if index >= rounds_fired:
+		draw_cartridge(index)
+	else:
+		draw_empty(index)
+
+func draw_sector_hover(index:int, start:float, middle:float, stop:float):
+	draw_sector_normal(index, start, middle, stop)
+
+func draw_sector_pressing(index:int, start:float, middle:float, stop:float):
+	draw_sector_normal(index, start, middle, stop)
+
+func draw_cartridge(index:int):
+	var pos = get_sector_center(index)
+	var cart_rad = inverse_lerp_band(0.4, false)
+	var primer_rad = cart_rad * 0.5
+	draw_circle(pos, cart_rad, cart_color)
+	draw_circle(pos, primer_rad, primer_color)
+
+func draw_empty(index:int):
+	var pos = get_sector_center(index)
+	var cart_rad = inverse_lerp_band(0.4, false)
+	draw_circle(pos, cart_rad, bore_color)
+
+
+func draw_center_normal():
+	pass
+func draw_center_hover():
+	var font = SystemFont.new()
+	var string_center = font.get_string_size(\"Shoot!\") * 0.5
+	draw_string(font, center - string_center, \"Shoot!\")
+func draw_center_pressing():
+	draw_circle(center, central_radius * 0.8, axis_color.lerp(Color.CORAL, 0.4))
+"
+
+[node name="Revolver_Radmenu_Demo" type="Container"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_h2yge")
+center_radius = 0.33
+sector_margin = 0.0
+centered_sector = true
+metadata/_custom_type_script = "uid://dhgitjlltnjsj"
+
+[node name="Control_0" type="Control" parent="."]
+layout_mode = 2
+
+[node name="Control_1" type="Control" parent="."]
+layout_mode = 2
+
+[node name="Control_2" type="Control" parent="."]
+layout_mode = 2
+
+[node name="Control_3" type="Control" parent="."]
+layout_mode = 2
+
+[node name="Control_4" type="Control" parent="."]
+layout_mode = 2
+
+[node name="Control_5" type="Control" parent="."]
+layout_mode = 2
